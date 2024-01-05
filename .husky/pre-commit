@@ -1,0 +1,4 @@
+yarn run lint
+yarn format
+yarn run check-typing
+git add -A .
