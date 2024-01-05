@@ -5,7 +5,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 @Injectable()
 export class CompanyService {
   create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+    return createCompanyDto;
   }
 
   findAll() {
@@ -17,7 +17,7 @@ export class CompanyService {
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+    return updateCompanyDto;
   }
 
   remove(id: number) {
