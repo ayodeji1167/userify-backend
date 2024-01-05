@@ -20,7 +20,7 @@ export class CompanyEntity {
   @Column({ default: 0 })
   numberOfUsers: number;
 
-  @Column({ default: 0 })
+  @Column('float')
   percentage: number;
 
   @Column({ nullable: true })
@@ -31,4 +31,7 @@ export class CompanyEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ default: 1 })
+  user: number;
 }
