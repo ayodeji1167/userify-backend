@@ -32,6 +32,6 @@ export class CompanyEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ default: 1 })
-  user: number;
+  @Column()
+  user: string;
 }

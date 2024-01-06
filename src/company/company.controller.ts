@@ -6,18 +6,39 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { FirebaseGuard } from 'src/auth/guard/firebase.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { imageOptions } from 'src/shared/multer';
+import { RolesGuard } from 'src/auth/guard/role.guard';
+import { Roles } from 'src/auth/decorators/role.decorator';
 
 @Controller('company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
+  @UseGuards(FirebaseGuard)
   @Post()
-  async create(@Body() createCompanyDto: CreateCompanyDto) {
-    return await this.companyService.create(createCompanyDto);
+  async create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
+    console.log('Request is ... ', req.user);
+    return await this.companyService.create(createCompanyDto, req.user.email);
+  }
+
+  @UseGuards(FirebaseGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Post('update/image')
+  @UseInterceptors(FileInterceptor('file', imageOptions))
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
+    console.log(' im in update ...', req.user);
+
+    return await this.companyService.updateImage(file, req?.user?.email);
   }
 
   @Get()
@@ -25,9 +46,9 @@ export class CompanyController {
     return this.companyService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+  @Get(':email')
+  async findbyEmail(@Param('email') email: string) {
+    return await this.companyService.findByEmail(email);
   }
 
   @Patch(':id')

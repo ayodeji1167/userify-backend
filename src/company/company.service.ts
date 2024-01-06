@@ -11,10 +11,22 @@ export class CompanyService {
     @InjectRepository(CompanyEntity)
     private companyRepository: Repository<CompanyEntity>
   ) {}
-  async create(createCompanyDto: CreateCompanyDto) {
-    const newCompany = this.companyRepository.create(createCompanyDto);
-    const saveCompany = await this.companyRepository.save(newCompany);
-    return saveCompany;
+  async create(createCompanyDto: CreateCompanyDto, email: string) {
+    const company = await this.companyRepository.findOneBy({ user: email });
+    if (!company) {
+      const newCompany = this.companyRepository.create({
+        ...createCompanyDto,
+        user: email,
+      });
+      const saveCompany = await this.companyRepository.save(newCompany);
+      return saveCompany;
+    } else {
+      const newCompany = { ...company, ...createCompanyDto };
+      console.log({ newCompany });
+
+      const updateCompany = await this.companyRepository.save(newCompany);
+      return updateCompany;
+    }
   }
 
   findAll() {
@@ -23,6 +35,13 @@ export class CompanyService {
 
   findOne(id: number) {
     return `This action returns a #${id} company`;
+  }
+  async findByEmail(email: string) {
+    const company = await this.companyRepository.findOneBy({ user: email });
+    return company;
+  }
+  async updateImage(file: Express.Multer.File, email: string) {
+    console.log(file);
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {
