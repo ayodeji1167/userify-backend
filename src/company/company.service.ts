@@ -53,7 +53,6 @@ export class CompanyService {
       'COMPANY/IMAGE'
     );
     const newCompany = { ...company, companyLogo: imageRes.url };
-
     const updateCompany = await this.companyRepository.save(newCompany);
     return updateCompany;
   }
