@@ -11,10 +11,11 @@ import { UserModule } from 'src/user/user.module';
   imports: [
     TypeOrmModule.forFeature([CompanyEntity]),
     forwardRef(() => AuthModule),
-    UserModule,
+    forwardRef(() => UserModule),
     SharedModule,
   ],
   controllers: [CompanyController],
   providers: [CompanyService],
+  exports: [CompanyService],
 })
 export class CompanyModule {}

@@ -19,7 +19,6 @@ export class AuthService {
   async verifyToken(token: string): Promise<admin.auth.DecodedIdToken> {
     try {
       const decodedToken = await this.firebaseAdmin.auth().verifyIdToken(token);
-      console.log('i am verified');
       return decodedToken;
     } catch (error) {
       throw new UnauthorizedException();

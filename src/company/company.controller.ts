@@ -27,7 +27,6 @@ export class CompanyController {
   @UseGuards(FirebaseGuard)
   @Post()
   async create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
-    console.log('Request is ... ', req.user);
     return await this.companyService.create(createCompanyDto, req.user.email);
   }
 
@@ -35,10 +34,11 @@ export class CompanyController {
   @Roles('ADMIN')
   @Post('update/image')
   @UseInterceptors(FileInterceptor('file', imageOptions))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
-    console.log(' im in update ...', req.user);
-
-    return await this.companyService.updateImage(file, req?.user?.email);
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('email') email: string
+  ) {
+    return await this.companyService.updateImage(file, email);
   }
 
   @Get()
