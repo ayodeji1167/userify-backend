@@ -6,7 +6,7 @@ import { AllExceptionsFilter } from './exceptionFilter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({ origin: [<string>process.env.FRONTEND_HOST] });
   app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalPipes(
